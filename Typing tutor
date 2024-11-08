@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+#define MAX_WORD_LENGTH 20
+#define NUM_WORDS 5
+#define DURATION_SECONDS 60
+
+char* words[NUM_WORDS] = {"apple", "banana", "orange", "grape", "pineapple"};
+
+void clearInputBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
+int main() {
+    srand(time(NULL));
+
+    printf("Welcome to Typing Tutor!\n");
+    printf("Type the word shown as fast as you can.\n");
+    printf("Type 'exit' to quit.\n\n");
+
+    time_t start_time = time(NULL);
+    time_t current_time;
+
+    do {
+        int index = rand() % NUM_WORDS;
+        char word[MAX_WORD_LENGTH];
+        strcpy(word, words[index]);
+
+        printf("Type: %s\n", word);
+
+        char input[MAX_WORD_LENGTH];
+        clock_t input_start_time = clock();
+        scanf("%s", input);
+        clearInputBuffer();
+        clock_t input_end_time = clock();
+
+        if (strcmp(input, "exit") == 0) {
+            printf("Exiting the program. Goodbye!\n");
+            break;
+        }
+
+        double time_taken = ((double)(input_end_time - input_start_time)) / CLOCKS_PER_SEC;
+        printf("Time taken: %.2f seconds\n", time_taken);
+
+        if (strcmp(input, word) == 0) {
+            printf("Correct!\n\n");
+        } else {
+            printf("Incorrect. Try again.\n\n");
+        }
+
+        current_time = time(NULL);
+    } while (difftime(current_time, start_time) < DURATION_SECONDS);
+
+    printf("Time's up! You have completed the typing session. Goodbye!\n");
+    return 0;
+}
